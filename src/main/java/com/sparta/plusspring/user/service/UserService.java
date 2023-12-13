@@ -6,8 +6,6 @@ import com.sparta.plusspring.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,4 +28,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void nameCheck(UserRequestDto userRequestDto) {
+        String nickname = userRequestDto.getNickname();
+
+        if (userRepository.findByNickname(nickname).isPresent()) {
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
+        }
+    }
 }

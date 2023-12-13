@@ -15,6 +15,6 @@ public class UserRequestDto {
     private String password;
 
     @Pattern(regexp = "^[a-zA-Z0-9]{4,15}$")
-    private String checkPassword;
+    private String passwordCheck;
 
 }
