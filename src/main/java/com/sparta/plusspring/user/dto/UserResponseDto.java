@@ -12,9 +12,5 @@ import lombok.Setter;
 public class UserResponseDto extends CommonResponseDto{
 
     private String nickname;
-
-    public UserResponseDto(String nickname) {
-        this.nickname = getNickname();
-    }
-
+    private String password;
 }
