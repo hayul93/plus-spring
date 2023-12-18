@@ -1,7 +1,7 @@
 package com.sparta.plusspring.user.controller;
 
+import com.sparta.plusspring.CommonResponseDto;
 import com.sparta.plusspring.jwt.JwtUtil;
-import com.sparta.plusspring.user.dto.CommonResponseDto;
 import com.sparta.plusspring.user.dto.UserRequestDto;
 import com.sparta.plusspring.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;

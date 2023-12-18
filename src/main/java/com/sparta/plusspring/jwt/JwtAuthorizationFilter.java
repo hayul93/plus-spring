@@ -1,8 +1,9 @@
 package com.sparta.plusspring.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.plusspring.user.dto.CommonResponseDto;
+
+import com.sparta.plusspring.CommonResponseDto;
 import com.sparta.plusspring.user.security.UserDetailsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,25 +25,26 @@ import java.util.Objects;
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        String token = jwtUtil.resolveToken(request);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//        String token = jwtUtil.resloveToken(request);
+        String token = jwtUtil.getTokenFromRequest(request);
 
-        if(Objects.nonNull(token)) {
-            if(jwtUtil.validateToken(token)) {
+        if (Objects.nonNull(token)) {
+            if (jwtUtil.validateToken(token)) {
                 Claims info = jwtUtil.getUserInfoFromToken(token);
 
-                // 인증정보에 요저정보(nickname) 넣기
-                // username -> user 조회
-                String nickname = info.getSubject();
+                // 인증정보에 유저정보(uid) 넣기
+                // uid -> user 조회
+                String uid = info.getSubject();
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 // -> userDetails 에 담고
-                UserDetails userDetails = userDetailsService.getUserDetails(nickname);
+                UserDetails userDetails = userDetailsService.getUserDetails(uid);
                 // -> authentication의 principal 에 담고
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 // -> securityContent 에 담고
@@ -53,9 +55,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             } else {
                 // 인증정보가 존재하지 않을때
                 CommonResponseDto commonResponseDto = new CommonResponseDto("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value());
-                // 응답값에 statys를 세팅해줘야해서 사용
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                //Body가 깨지면 안되기 떄문에 사용
                 response.setContentType("application/json; charset=UTF-8");
                 response.getWriter().write(objectMapper.writeValueAsString(commonResponseDto));
                 return;

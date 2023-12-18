@@ -1,15 +1,12 @@
 package com.sparta.plusspring.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sparta.plusspring.user.entity.User;
-import lombok.AllArgsConstructor;
+import com.sparta.plusspring.CommonResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
-public class UserResponseDto extends CommonResponseDto{
+public class UserResponseDto extends CommonResponseDto {
 
     private String nickname;
     private String password;

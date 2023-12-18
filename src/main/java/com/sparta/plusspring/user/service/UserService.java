@@ -4,11 +4,8 @@ import com.sparta.plusspring.jwt.JwtUtil;
 import com.sparta.plusspring.user.dto.UserRequestDto;
 import com.sparta.plusspring.user.entity.User;
 import com.sparta.plusspring.user.repository.UserRepository;
-import com.sparta.plusspring.user.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
