@@ -53,6 +53,21 @@ public class PostController {
         }
     }
 
+    //게시글 수정
+    @PatchMapping("/{postId}")
+    public ResponseEntity<?> updatePost(
+            @PathVariable Long postId,
+            @RequestBody PostRequestDto postRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        try {
+            PostResponseDto postResponseDto = postService.updatePost(postId, postRequestDto, userDetails);
+            return ResponseEntity.ok().body(postResponseDto);
+        } catch (RejectedExecutionException | IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
 
 
 

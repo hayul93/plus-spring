@@ -4,12 +4,15 @@ import com.sparta.plusspring.post.dto.PostRequestDto;
 import com.sparta.plusspring.post.dto.PostResponseDto;
 import com.sparta.plusspring.post.entity.Post;
 import com.sparta.plusspring.post.repository.PostRepository;
+import com.sparta.plusspring.user.entity.User;
 import com.sparta.plusspring.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 @Service
 @RequiredArgsConstructor
@@ -57,9 +60,41 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
+    //게시글 수정
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
+
+        // 제목(title)과 내용(content)이 비어 있는 경우
+        if (postRequestDto.getTitle() == null || postRequestDto.getTitle().trim().isEmpty()) {
+            // 제목이 비어있을 때의 에러 메시지 처리
+            throw new IllegalArgumentException("제목이 비어있습니다. 제목을 작성해 주세요.");
+        } else if (postRequestDto.getContent() == null || postRequestDto.getContent().trim().isEmpty()) {
+            // 내용이 비어있을 때의 에러 메시지 처리
+            throw new IllegalArgumentException("내용이 비어있습니다. 내용을 작성해 주세요.");
+        }
+
+        Post post = getUserPost(postId, userDetails.getUser());
+
+        post.setTitle(postRequestDto.getTitle());
+        post.setContent(postRequestDto.getContent());
+
+        return new PostResponseDto(post);
+    }
+
     //게시글 예외처리
     private Post getPost(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+    }
+
+    //게시글 수정시 예외처리
+    public Post getUserPost(Long postId, User user) {
+        Post post = getPost(postId);
+
+        if (!user.getNickname().equals(post.getUser().getNickname())) {
+            throw new RejectedExecutionException("수정 권한이 없습니다.");
+        }
+
+        return post;
     }
 }
