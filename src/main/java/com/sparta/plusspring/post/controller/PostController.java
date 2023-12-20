@@ -68,6 +68,20 @@ public class PostController {
         }
     }
 
+    //게시글 삭제
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<CommonResponseDto> deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        try {
+            postService.deletePost(postId, userDetails);
+            return ResponseEntity.ok().body(new CommonResponseDto("정상적으로 삭제 되었습니다.", HttpStatus.OK.value()));
+        } catch (RejectedExecutionException | IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
 
 
 

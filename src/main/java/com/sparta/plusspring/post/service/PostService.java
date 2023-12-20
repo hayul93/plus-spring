@@ -81,6 +81,15 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
+    //게시글 삭제
+    @Transactional
+    public void deletePost(Long postId, UserDetailsImpl userDetails
+    ) {
+        Post post = getUserPost(postId, userDetails.getUser());
+
+        postRepository.delete(post);
+    }
+
     //게시글 예외처리
     private Post getPost(Long postId) {
         return postRepository.findById(postId)
@@ -97,4 +106,5 @@ public class PostService {
 
         return post;
     }
+
 }
