@@ -1,5 +1,7 @@
 package com.sparta.plusspring.post.service;
 
+import com.sparta.plusspring.comment.entity.Comment;
+import com.sparta.plusspring.comment.repository.CommentRepository;
 import com.sparta.plusspring.post.dto.PostRequestDto;
 import com.sparta.plusspring.post.dto.PostResponseDto;
 import com.sparta.plusspring.post.entity.Post;
@@ -18,6 +20,7 @@ import java.util.concurrent.RejectedExecutionException;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     //게시물 저장 역할
     public PostResponseDto createPosts(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
@@ -57,7 +60,8 @@ public class PostService {
     //게시글 단건 조회
     public PostResponseDto getPostDto(Long postId) {
         Post post = getPost(postId);
-        return new PostResponseDto(post);
+        List<Comment> commentList = commentRepository.findAllByPostId(postId);
+        return new PostResponseDto(post, commentList, post.getUser().getNickname());
     }
 
     //게시글 수정
