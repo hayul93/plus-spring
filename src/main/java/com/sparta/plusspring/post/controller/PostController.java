@@ -7,6 +7,7 @@ import com.sparta.plusspring.post.service.PostService;
 import com.sparta.plusspring.CommonResponseDto;
 import com.sparta.plusspring.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,9 +38,20 @@ public class PostController {
     }
 
     //전체 게시글 조회
+//    @GetMapping("/list")
+//    public List<PostResponseDto> getAllPosts() {
+//        return postService.getAllPosts();
+//    }
+
+    //게시글 전제 조회 - 페이징 처리
     @GetMapping("/list")
-    public List<PostResponseDto> getAllPosts() {
-        return postService.getAllPosts();
+    public Page<PostResponseDto> getAllPosts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") Boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getAllPosts(userDetails.getUser(), page - 1, size, sortBy, isAsc);
     }
 
     //단건 게시글 조회

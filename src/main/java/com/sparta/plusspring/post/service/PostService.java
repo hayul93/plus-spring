@@ -9,6 +9,10 @@ import com.sparta.plusspring.post.repository.PostRepository;
 import com.sparta.plusspring.user.entity.User;
 import com.sparta.plusspring.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,16 +49,30 @@ public class PostService {
     }
 
     //게시글 전제 조회
-    public List<PostResponseDto> getAllPosts() {
-        List<Post> postList = postRepository.findAll();
+//    public List<PostResponseDto> getAllPosts() {
+//        List<Post> postList = postRepository.findAll();
+//
+//        List<PostResponseDto> responseDtoList = new ArrayList<>();
+//
+//        for (Post post : postList) {
+//            responseDtoList.add(new PostResponseDto(post));
+//        }
+//
+//        return responseDtoList;
+//    }
 
-        List<PostResponseDto> responseDtoList = new ArrayList<>();
+    //게시글 전제 조회 - 페이징 처리
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> getAllPosts(User user, int page, int size, String sortBy, Boolean isAsc) {
 
-        for (Post post : postList) {
-            responseDtoList.add(new PostResponseDto(post));
-        }
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        return responseDtoList;
+        Page<Post> productsList;
+            productsList = postRepository.findAll(pageable);
+
+        return productsList.map(PostResponseDto::new);
     }
 
     //게시글 단건 조회
