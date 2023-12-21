@@ -10,13 +10,10 @@ import com.sparta.plusspring.user.entity.User;
 import com.sparta.plusspring.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -63,16 +60,12 @@ public class PostService {
 
     //게시글 전제 조회 - 페이징 처리
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> getAllPosts(User user, int page, int size, String sortBy, Boolean isAsc) {
+    public Page<PostResponseDto> getAllPosts(Pageable pageable) {
 
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Post> postsList;
+        postsList = postRepository.findAll(pageable);
 
-        Page<Post> productsList;
-            productsList = postRepository.findAll(pageable);
-
-        return productsList.map(PostResponseDto::new);
+        return postsList.map(PostResponseDto::new);
     }
 
     //게시글 단건 조회
