@@ -42,8 +42,14 @@ public class PostController {
     //게시글 전제 조회 - 페이징 처리
     @GetMapping("/list")
     public Page<PostResponseDto> getAllPosts(
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return postService.getAllPosts(pageable);
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            String searchKeyword) {
+
+        if (searchKeyword == null) {
+            return postService.getAllPosts(pageable);
+        } else {
+            return postService.postSearchList(searchKeyword, pageable);
+        }
     }
 
     //단건 게시글 조회

@@ -75,6 +75,12 @@ public class PostService {
         return new PostResponseDto(post, commentList, post.getUser().getNickname());
     }
 
+    //게시글 검색 기능
+    public Page<PostResponseDto> postSearchList(String searchKeyword, Pageable pageable) {
+
+        return postRepository.findByTitleContaining(searchKeyword, pageable);
+    }
+
     //게시글 수정
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
