@@ -26,7 +26,7 @@ public class PostResponseDto {
         this.createDate = post.getCreateDate();
     }
 
-    public PostResponseDto(Post post, List<Comment> commentList, String nickname) {
+    public PostResponseDto(Post post, List<Comment> commentList) {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createDate = post.getCreateDate();

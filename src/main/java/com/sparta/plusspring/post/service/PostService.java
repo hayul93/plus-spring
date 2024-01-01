@@ -72,7 +72,7 @@ public class PostService {
     public PostResponseDto getPostDto(Long postId) {
         Post post = getPost(postId);
         List<Comment> commentList = commentRepository.findAllByPostId(postId);
-        return new PostResponseDto(post, commentList, post.getUser().getNickname());
+        return new PostResponseDto(post, commentList);
     }
 
     //게시글 검색 기능
