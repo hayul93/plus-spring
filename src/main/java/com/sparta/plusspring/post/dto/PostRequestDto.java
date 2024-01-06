@@ -11,6 +11,6 @@ public class PostRequestDto {
     @Size(max = 500, message = "500자 이내로 입력해주세요")
     private String title;
 
-    @Size(max = 500, message = "5000자 이내로 입력해주세요")
+    @Size(max = 5000, message = "5000자 이내로 입력해주세요")
     private String content;
 }
